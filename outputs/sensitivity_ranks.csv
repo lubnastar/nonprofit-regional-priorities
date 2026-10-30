@@ -1,0 +1,14 @@
+region,base,no_ss,no_income,no_food,plus_margin,ranks_not_z,best,worst,top5_in_n
+Najran,1,1,1,1,1,1,1,1,6
+Jazan,2,6,2,2,2,4,2,6,5
+Madinah,3,2,5,3,3,3,2,5,6
+Tabuk,4,3,4,5,4,2,2,5,6
+Makkah,5,4,3,4,5,6,3,6,5
+Al-Jouf,6,5,8,6,6,5,5,8,2
+Asir,7,7,6,7,8,11,6,11,0
+Hail,8,10,7,10,9,8,7,10,0
+Northern Borders,9,9,9,9,10,9,9,10,0
+Eastern Province,10,8,10,8,7,6,6,10,0
+Qassim,11,11,12,11,11,13,11,13,0
+Al-Baha,12,13,11,12,12,9,9,13,0
+Riyadh,13,12,13,13,13,12,12,13,0
