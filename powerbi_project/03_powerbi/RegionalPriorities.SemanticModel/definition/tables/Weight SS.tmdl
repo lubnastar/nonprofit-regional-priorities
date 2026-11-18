@@ -1,0 +1,19 @@
+/// Weight of the social security rate in the fragility index (0-5, default 1)
+table 'Weight SS'
+	lineageTag: e4c31fc7-378f-5297-a5dd-48515be20019
+
+	column 'Weight SS'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0923888c-f2a1-5c0a-a735-da631e1c32f4
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition 'Weight SS' = calculated
+		mode: import
+		source = GENERATESERIES ( 0, 5, 1 )
+
+	annotation PBI_Id = 6d876aa7799a5a0db4f64c23a06c1399
+

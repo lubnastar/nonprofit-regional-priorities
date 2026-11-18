@@ -1,0 +1,5 @@
+﻿scenario,scenario_label,social_security_basis,organizations_counted,scenario_order
+A,A · SS 2022 · All organizations,2022,Associations + foundations,1
+B,B · SS 2022 · Associations only,2022,Associations only,2
+C,C · SS avg 2020-22 · All organizations,Average 2020-2022,Associations + foundations,3
+D,D · SS avg 2020-22 · Associations only,Average 2020-2022,Associations only,4

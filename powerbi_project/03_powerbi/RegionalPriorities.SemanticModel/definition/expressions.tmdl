@@ -1,0 +1,6 @@
+/// Folder holding the model CSV files. Change it if the project is moved (Transform data > Edit parameters).
+expression DataFolder = "C:\Users\lubna\OneDrive\سطح المكتب\projectsForMe\Lubna_submission\powerbi_project\02_data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: f63f005a-f2cf-51c9-85aa-bbebbdf8a15e
+
+	annotation PBI_ResultType = Text
+

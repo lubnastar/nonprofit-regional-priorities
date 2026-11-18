@@ -1,0 +1,63 @@
+/// Population by region and year, 2010-2022.
+table fact_population
+	lineageTag: 35576af8-981e-5ed1-92c5-52dc019ce45d
+
+	/// Region key
+	column region_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 573f2e8d-1101-5b4b-8cc4-36138c0c0ce9
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Year key
+	column year
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d89a991a-74bb-5e9c-a641-42e53b697343
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Total population (SAMA)
+	column population
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 0e41b8a6-3e4a-5144-8ca0-273f7b7936ab
+		summarizeBy: none
+		sourceColumn: population
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Saudi population (GASTAT; 2010-2021 back-cast from the 2022 census)
+	column saudi_population
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: fb12def9-75d4-5207-9880-cd02a188d2f8
+		summarizeBy: none
+		sourceColumn: saudi_population
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_population = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "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",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\fact_population.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"region_id", Int64.Type}, {"year", Int64.Type}, {"population", Int64.Type}, {"saudi_population", Int64.Type}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

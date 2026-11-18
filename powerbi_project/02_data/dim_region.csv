@@ -1,0 +1,14 @@
+﻿region_id,region_en,region_ar,tile_col,tile_row,priority_group,priority_group_order,baseline_gap_rank
+1,Riyadh,الرياض,2,2,Not a stable priority,3,13
+2,Makkah,مكة المكرمة,1,3,Mainly few non-profits,2,5
+3,Madinah,المدينة المنورة,1,2,Mainly few non-profits,2,3
+4,Qassim,القصيم,2,1,Not a stable priority,3,11
+5,Eastern Province,المنطقة الشرقية,3,2,Not a stable priority,3,10
+6,Asir,عسير,2,4,Not a stable priority,3,7
+7,Tabuk,تبوك,0,1,Mainly few non-profits,2,4
+8,Hail,حائل,1,1,Not a stable priority,3,8
+9,Northern Borders,الحدود الشمالية,2,0,Not a stable priority,3,9
+10,Jazan,جازان,1,4,Fragility + few non-profits,1,2
+11,Najran,نجران,3,4,Fragility + few non-profits,1,1
+12,Al-Baha,الباحة,2,3,Not a stable priority,3,12
+13,Al-Jouf,الجوف,1,0,Not a stable priority,3,6

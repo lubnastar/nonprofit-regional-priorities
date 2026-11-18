@@ -1,0 +1,68 @@
+/// Disconnected selector for the four gap scenarios of notebook section 7.
+table dim_scenario
+	lineageTag: acb7b948-bf51-5627-85a9-de08114a9997
+
+	/// Scenario letter A-D
+	column scenario
+		dataType: string
+		lineageTag: 17ac3595-c366-5737-92e9-18736c951c99
+		summarizeBy: none
+		sourceColumn: scenario
+		sortByColumn: scenario_order
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Scenario label for slicers
+	column scenario_label
+		dataType: string
+		lineageTag: f3dc39cd-2693-5d72-b5ce-9aac8ade1318
+		summarizeBy: none
+		sourceColumn: scenario_label
+		sortByColumn: scenario_order
+
+		annotation SummarizationSetBy = Automatic
+
+	/// 2022 or average 2020-2022
+	column social_security_basis
+		dataType: string
+		lineageTag: effe1c34-40d6-5966-b10e-c1148b4e2727
+		summarizeBy: none
+		sourceColumn: social_security_basis
+
+		annotation SummarizationSetBy = Automatic
+
+	/// All organizations or associations only
+	column organizations_counted
+		dataType: string
+		lineageTag: f7a7ae7e-d435-54e3-8e98-a1e687129bed
+		summarizeBy: none
+		sourceColumn: organizations_counted
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Sort order
+	column scenario_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7fa9f7ee-8aab-5701-8169-985e00dbf6f5
+		summarizeBy: none
+		sourceColumn: scenario_order
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_scenario = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "hY5LCoMwEIb3gdwh+07Bpr1A1Bt4gDDGVAIhgUQFe7Euuij0Qr1Cq7X0Ke6G//HNfz2do9IOg/HwPKTFUluIXhm0MmrVBtP0ssRoIvhQozMHbIx3USrfukZXr6oPlQ6UCBDscmRFwXjC+XAKa9lHFwYHRBzfjApbsf2dV03+hpIU0m/Me9472//BPGRKMsimNnb1QEjWc1tEpwPWegotDNtSkkM+g/4ZsoAeMztKbg==",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\dim_scenario.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"scenario", type text}, {"scenario_label", type text}, {"social_security_basis", type text}, {"organizations_counted", type text}, {"scenario_order", Int64.Type}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

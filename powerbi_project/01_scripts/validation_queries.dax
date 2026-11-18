@@ -1,0 +1,119 @@
+-- @regions_A
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_region[region_id], dim_region[region_en],
+    TREATAS ( { "A" }, dim_scenario[scenario] ),
+    "population", [Population 2022], "saudi_population", [Saudi Population 2022],
+        "association", [Associations], "foundation", [Foundations], "total", [Organizations (All Types)],
+        "beneficiaries_2022", [Beneficiaries 2022], "income_median_saudi", [Median Income (Saudi)], "food_share", [Food Share %],
+        "ss_rate_2022", [SS Rate 2022 %], "ss_rate_avg", [SS Rate Avg 2020-22 %],
+        "density_all", [Org Density per 100k], "density_assoc", [Association Density per 100k],
+        "fragility", [Fragility Index], "gap", [Gap Score], "gap_rank", [Gap Rank],
+        "frag_part", [Fragility Part], "dens_part", [Few Non-profits Part], "source", [Gap Source],
+        "quadrant", [Quadrant], "scenarios_top5", [Scenarios in Top 5]
+)
+
+-- @regions_B
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_region[region_id], dim_region[region_en],
+    TREATAS ( { "B" }, dim_scenario[scenario] ),
+    "population", [Population 2022], "saudi_population", [Saudi Population 2022],
+        "association", [Associations], "foundation", [Foundations], "total", [Organizations (All Types)],
+        "beneficiaries_2022", [Beneficiaries 2022], "income_median_saudi", [Median Income (Saudi)], "food_share", [Food Share %],
+        "ss_rate_2022", [SS Rate 2022 %], "ss_rate_avg", [SS Rate Avg 2020-22 %],
+        "density_all", [Org Density per 100k], "density_assoc", [Association Density per 100k],
+        "fragility", [Fragility Index], "gap", [Gap Score], "gap_rank", [Gap Rank],
+        "frag_part", [Fragility Part], "dens_part", [Few Non-profits Part], "source", [Gap Source],
+        "quadrant", [Quadrant], "scenarios_top5", [Scenarios in Top 5]
+)
+
+-- @regions_C
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_region[region_id], dim_region[region_en],
+    TREATAS ( { "C" }, dim_scenario[scenario] ),
+    "population", [Population 2022], "saudi_population", [Saudi Population 2022],
+        "association", [Associations], "foundation", [Foundations], "total", [Organizations (All Types)],
+        "beneficiaries_2022", [Beneficiaries 2022], "income_median_saudi", [Median Income (Saudi)], "food_share", [Food Share %],
+        "ss_rate_2022", [SS Rate 2022 %], "ss_rate_avg", [SS Rate Avg 2020-22 %],
+        "density_all", [Org Density per 100k], "density_assoc", [Association Density per 100k],
+        "fragility", [Fragility Index], "gap", [Gap Score], "gap_rank", [Gap Rank],
+        "frag_part", [Fragility Part], "dens_part", [Few Non-profits Part], "source", [Gap Source],
+        "quadrant", [Quadrant], "scenarios_top5", [Scenarios in Top 5]
+)
+
+-- @regions_D
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_region[region_id], dim_region[region_en],
+    TREATAS ( { "D" }, dim_scenario[scenario] ),
+    "population", [Population 2022], "saudi_population", [Saudi Population 2022],
+        "association", [Associations], "foundation", [Foundations], "total", [Organizations (All Types)],
+        "beneficiaries_2022", [Beneficiaries 2022], "income_median_saudi", [Median Income (Saudi)], "food_share", [Food Share %],
+        "ss_rate_2022", [SS Rate 2022 %], "ss_rate_avg", [SS Rate Avg 2020-22 %],
+        "density_all", [Org Density per 100k], "density_assoc", [Association Density per 100k],
+        "fragility", [Fragility Index], "gap", [Gap Score], "gap_rank", [Gap Rank],
+        "frag_part", [Fragility Part], "dens_part", [Few Non-profits Part], "source", [Gap Source],
+        "quadrant", [Quadrant], "scenarios_top5", [Scenarios in Top 5]
+)
+
+-- @weights_no_ss
+EVALUATE
+SUMMARIZECOLUMNS ( dim_region[region_id], dim_region[region_en], TREATAS ( { 0 }, 'Weight SS'[Weight SS] ), "gap_rank", [Gap Rank] )
+
+-- @weights_no_income
+EVALUATE
+SUMMARIZECOLUMNS ( dim_region[region_id], dim_region[region_en], TREATAS ( { 0 }, 'Weight Income'[Weight Income] ), "gap_rank", [Gap Rank] )
+
+-- @weights_no_food
+EVALUATE
+SUMMARIZECOLUMNS ( dim_region[region_id], dim_region[region_en], TREATAS ( { 0 }, 'Weight Food'[Weight Food] ), "gap_rank", [Gap Rank] )
+
+-- @robustness
+EVALUATE
+SUMMARIZECOLUMNS (
+    dim_region[region_id], dim_region[region_en],
+    "tests_top5", [Tests in Top 5], "best", [Best Rank Across Tests], "worst", [Worst Rank Across Tests],
+    "weights_top5_pct", [Random Weights Top 5 %], "loo_top5", [Leave-One-Out Top 5], "loo_worst", [Leave-One-Out Worst Rank]
+)
+
+-- @statistics
+EVALUATE
+ROW (
+    "spearman_orgs_vs_population", [Spearman Orgs vs Population],
+    "spearman_income_vs_food_share", [Spearman Income vs Food Share],
+    "spearman_ss_rate_2020_vs_2022", [Spearman SS Rate 2020 vs 2022],
+    "spearman_ss_rate_2021_vs_2022", [Spearman SS Rate 2021 vs 2022],
+    "spearman_fragility_2022_vs_avg", [Spearman Fragility 2022 vs Avg],
+    "national_beneficiaries_2021", CALCULATE ( [Beneficiaries], dim_year[year] = 2021 ),
+    "national_beneficiaries_2022", CALCULATE ( [Beneficiaries], dim_year[year] = 2022 ),
+    "total_organizations", [Organizations (All Types)],
+    "total_population_2022", [Population 2022],
+    "riyadh_share_of_orgs_pct", CALCULATE ( [Share of National Organizations %], dim_region[region_en] = "Riyadh" ) * 100,
+    "riyadh_share_of_foundations_pct", CALCULATE ( [Share of National Foundations %], dim_region[region_en] = "Riyadh" ) * 100,
+    "median_fragility_2022", [Median Fragility],
+    "median_density_all", [Median Density]
+)
+
+-- @text_kpis
+EVALUATE
+ROW (
+    "Top Priority Region", [Top Priority Region], "Top Priority Gap", [Top Priority Gap], "Lead Over Second", [Lead Over Second],
+    "Top 5 Regions", [Top 5 Regions], "Stable Priority Regions", [Stable Priority Regions], "Stable Priority List", [Stable Priority List],
+    "Least Stable Priority", [Least Stable Priority], "Regions Without Foundations", [Regions Without Foundations],
+    "Lowest Income Region", [Lowest Income Region], "Highest Food Share Region", [Highest Food Share Region],
+    "Most Fragile Region", [Most Fragile Region], "Peak Beneficiaries", [Peak Beneficiaries], "Peak Year", [Peak Year],
+    "Change Peak to 2022 %", [Change Peak to 2022 %], "Change 2021 to 2022 %", [Change 2021 to 2022 %],
+    "Org Density per 100k (national)", [Org Density per 100k], "Largest to Smallest Population", [Largest to Smallest Population],
+    "Weights Label", [Weights Label], "Scenario Label", [Scenario Label]
+)
+
+-- @trend
+EVALUATE
+SUMMARIZECOLUMNS ( dim_year[year], "beneficiaries", [Beneficiaries], "yoy", [Beneficiaries YoY %], "ss_rate_year", [SS Rate (Year) %] )
+ORDER BY dim_year[year]
+
+-- @region_change
+EVALUATE
+SUMMARIZECOLUMNS ( dim_region[region_id], dim_region[region_en], "change_21_22", [Change 2021 to 2022 %], "index_2022", CALCULATE ( [Beneficiaries Index 2020=100], dim_year[year] = 2022 ) )

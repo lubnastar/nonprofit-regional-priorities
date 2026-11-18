@@ -1,0 +1,19 @@
+/// Weight of the food share of spending in the fragility index (0-5, default 1)
+table 'Weight Food'
+	lineageTag: 3418dc50-e782-5546-b8df-68b6d8e11744
+
+	column 'Weight Food'
+		dataType: int64
+		formatString: 0
+		lineageTag: b2122b14-e553-5789-a4c1-4fe859894a23
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition 'Weight Food' = calculated
+		mode: import
+		source = GENERATESERIES ( 0, 5, 1 )
+
+	annotation PBI_Id = f8c525e397b258258c99cf4886fe16d4
+

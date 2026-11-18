@@ -1,0 +1,792 @@
+/// Home table of all DAX measures (display folders 1-8).
+table _Measures
+	lineageTag: 4f5e5281-ddea-57a0-b761-4b3cf8588e8f
+
+	/// Number of regions in the current filter context.
+	measure Regions = DISTINCTCOUNT ( fact_region_snapshot[region_id] )
+		formatString: 0
+		displayFolder: 1. Base
+		lineageTag: 9627ff7b-8846-5f79-88a6-fd895a31527a
+
+	/// Total population 2022 (SAMA).
+	measure 'Population 2022' = SUM ( fact_region_snapshot[population_2022] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 34a18aab-cbf9-541c-a4dd-a7f0350d7690
+
+	/// Saudi population 2022 (GASTAT census).
+	measure 'Saudi Population 2022' = SUM ( fact_region_snapshot[saudi_population_2022] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 10638258-f60b-52b0-b2fd-e0c4b5d10094
+
+	/// Average Saudi population 2020-2022; denominator of the averaged social security rate.
+	measure 'Saudi Population Avg 2020-22' = SUM ( fact_region_snapshot[saudi_population_avg_2020_2022] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 274441a7-f63b-5693-b618-518ced449e60
+
+	/// Saudis as a share of the population, 2022.
+	measure 'Saudi Share %' = DIVIDE ( [Saudi Population 2022], [Population 2022] )
+		formatString: 0.0%
+		displayFolder: 1. Base
+		lineageTag: 6f650b42-f463-5065-a5d1-faa047db3755
+
+	/// Region's share of the national population, 2022.
+	measure 'Population Share %' = DIVIDE ( [Population 2022], CALCULATE ( [Population 2022], ALL ( dim_region ) ) )
+		formatString: 0.0%
+		displayFolder: 1. Base
+		lineageTag: 81d5f79b-8cfd-5172-9960-dc616d6d697c
+
+	/// Registered non-profit organizations (respects an organization-type filter).
+	measure Organizations = COUNTROWS ( fact_organizations )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: d80e1dee-50f2-5571-8c3c-bd495c47611e
+
+	/// Associations + foundations, ignoring any organization-type filter.
+	measure 'Organizations (All Types)' = CALCULATE ( COUNTROWS ( fact_organizations ), REMOVEFILTERS ( dim_org_type ) ) + 0
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: f337052a-75fa-5e00-ab70-c328f78e7e05
+
+	/// Registered civil associations.
+	measure Associations = CALCULATE ( COUNTROWS ( fact_organizations ), dim_org_type[org_type] = "Association" ) + 0
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 51fb0da0-6265-5bca-8441-41f97344cfdc
+
+	/// Registered civil foundations.
+	measure Foundations = CALCULATE ( COUNTROWS ( fact_organizations ), dim_org_type[org_type] = "Foundation" ) + 0
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 209fb899-894a-5d1c-a04e-49c3bf974720
+
+	/// Foundations as a share of all organizations in the region.
+	measure 'Foundation Share %' = DIVIDE ( [Foundations], [Organizations (All Types)] )
+		formatString: 0.0%
+		displayFolder: 1. Base
+		lineageTag: 37b48ae1-1463-57c5-8c4f-75129164bcf2
+
+	/// Region's share of all 2,723 organizations.
+	measure 'Share of National Organizations %' = DIVIDE ( [Organizations (All Types)], CALCULATE ( [Organizations (All Types)], ALL ( dim_region ) ) )
+		formatString: 0.0%
+		displayFolder: 1. Base
+		lineageTag: 8fbe34ad-26b4-5c70-88da-a8a0d35ed210
+
+	/// Region's share of all foundations.
+	measure 'Share of National Foundations %' = DIVIDE ( [Foundations], CALCULATE ( [Foundations], ALL ( dim_region ) ) )
+		formatString: 0.0%
+		displayFolder: 1. Base
+		lineageTag: 092c6c51-cfb9-5325-abf4-69097c3daa6b
+
+	/// Regions with no registered foundation.
+	measure 'Regions Without Foundations' = COUNTROWS ( FILTER ( VALUES ( dim_region[region_id] ), [Foundations] = 0 ) )
+		formatString: 0
+		displayFolder: 1. Base
+		lineageTag: eb5a1a34-5dc1-530c-85ad-76339e2f4c2b
+
+	/// Social security beneficiaries in 2022.
+	measure 'Beneficiaries 2022' = SUM ( fact_region_snapshot[beneficiaries_2022] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 294ee460-8990-55fc-b9ca-de17d1928958
+
+	/// Average beneficiaries over 2020-2022.
+	measure 'Beneficiaries Avg 2020-22' = SUM ( fact_region_snapshot[beneficiaries_avg_2020_2022] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: ddf46de7-0adb-5783-a81b-5b6aca8680a6
+
+	/// Median monthly disposable income per Saudi, SAR (HIES 2023). Region level only: medians cannot be added up.
+	measure 'Median Income (Saudi)' = IF ( HASONEVALUE ( dim_region[region_id] ), SUM ( fact_region_snapshot[income_median_saudi] ) )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 5c5f27a8-4fe2-5021-89b9-0625f467ee5f
+
+	/// Mean monthly income per Saudi, SAR.
+	measure 'Mean Income (Saudi)' = IF ( HASONEVALUE ( dim_region[region_id] ), SUM ( fact_region_snapshot[income_mean_saudi] ) )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: c792dfad-c005-5d7e-943f-39c3a3d06292
+
+	/// Mean monthly spending per Saudi, SAR.
+	measure 'Mean Spending (Saudi)' = IF ( HASONEVALUE ( dim_region[region_id] ), SUM ( fact_region_snapshot[spend_mean_saudi] ) )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 5e9ffc5f-6d72-544c-9730-fe0ae5830790
+
+	/// Mean income minus mean spending; only used in the 'plus margin' sensitivity test (negative in Jazan).
+	measure 'Income Margin (Saudi)' = [Mean Income (Saudi)] - [Mean Spending (Saudi)]
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 3aaaf03b-2590-560a-871e-411d99530350
+
+	/// Food & beverages share of household spending (all households), HIES 2023.
+	measure 'Food Share %' = IF ( HASONEVALUE ( dim_region[region_id] ), SUM ( fact_region_snapshot[food_share] ) )
+		formatString: 0.0%
+		displayFolder: 1. Base
+		lineageTag: a3b19533-09f9-57a3-9c4e-a0ce5fa4f697
+
+	/// Social security beneficiaries 2022 / Saudi population 2022. Higher = more fragile.
+	measure 'SS Rate 2022 %' = DIVIDE ( [Beneficiaries 2022], [Saudi Population 2022] )
+		formatString: 0.00%
+		displayFolder: 2. Indicators
+		lineageTag: 15a7435e-d2df-577e-b896-bc16a2db9694
+
+	/// Average beneficiaries 2020-22 / average Saudi population 2020-22.
+	measure 'SS Rate Avg 2020-22 %' = DIVIDE ( [Beneficiaries Avg 2020-22], [Saudi Population Avg 2020-22] )
+		formatString: 0.00%
+		displayFolder: 2. Indicators
+		lineageTag: 7071e522-7ce9-5fe1-bc83-a7523d3c44ab
+
+	/// Associations + foundations per 100,000 residents (2022).
+	measure 'Org Density per 100k' = DIVIDE ( [Organizations (All Types)], [Population 2022] ) * 100000
+		formatString: 0.00
+		displayFolder: 2. Indicators
+		lineageTag: 79e85784-5bb4-52ab-ad1d-9998c007c532
+
+	/// Associations per 100,000 residents (2022).
+	measure 'Association Density per 100k' = DIVIDE ( [Associations], [Population 2022] ) * 100000
+		formatString: 0.00
+		displayFolder: 2. Indicators
+		lineageTag: 5f588d5b-630c-51ef-b3b5-06cd665552c5
+
+	/// Scenario chosen in the slicer; A when nothing or several are selected.
+	measure 'Selected Scenario' = SELECTEDVALUE ( dim_scenario[scenario], "A" )
+		displayFolder: 2. Indicators
+		lineageTag: 65c4b6d8-8af8-5cf7-8070-e6e142cb88d9
+
+	/// Label of the active scenario.
+	measure 'Scenario Label' = SELECTEDVALUE ( dim_scenario[scenario_label], "A · SS 2022 · All organizations" )
+		displayFolder: 2. Indicators
+		lineageTag: 0e88c4e6-d581-541f-8c7e-202c6c839cca
+
+	/// Social security rate used by the active scenario (2022 for A/B, 2020-22 average for C/D).
+	measure 'SS Rate (Scenario) %' = IF ( [Selected Scenario] IN { "A", "B" }, [SS Rate 2022 %], [SS Rate Avg 2020-22 %] )
+		formatString: 0.00%
+		displayFolder: 2. Indicators
+		lineageTag: f3cfb299-e16b-5775-88e5-dd9895b59bab
+
+	/// Density used by the active scenario (all organizations for A/C, associations only for B/D).
+	measure 'Density (Scenario)' = IF ( [Selected Scenario] IN { "A", "C" }, [Org Density per 100k], [Association Density per 100k] )
+		formatString: 0.00
+		displayFolder: 2. Indicators
+		lineageTag: d84721f1-a1df-519d-ac68-efcbaa4adbfe
+
+	/// Selected weight of the social security rate (default 1).
+	measure 'Weight SS Value' = SELECTEDVALUE ( 'Weight SS'[Weight SS], 1 )
+		formatString: 0
+		displayFolder: 2. Indicators
+		lineageTag: 210071d4-e58b-56f4-b9a5-aa00bc115ea6
+
+	/// Selected weight of low income (default 1).
+	measure 'Weight Income Value' = SELECTEDVALUE ( 'Weight Income'[Weight Income], 1 )
+		formatString: 0
+		displayFolder: 2. Indicators
+		lineageTag: 83fbaf9b-d6f1-58e4-890d-f1a2ef7c6929
+
+	/// Selected weight of the food share (default 1).
+	measure 'Weight Food Value' = SELECTEDVALUE ( 'Weight Food'[Weight Food], 1 )
+		formatString: 0
+		displayFolder: 2. Indicators
+		lineageTag: 73e8e817-70f7-5349-9579-878c4bdbaa6c
+
+	/// Text of the active fragility weights.
+	measure 'Weights Label' = "Weights  SS : Income : Food  =  " & [Weight SS Value] & " : " & [Weight Income Value] & " : " & [Weight Food Value] & IF ( [Weight SS Value] = [Weight Income Value] && [Weight Income Value] = [Weight Food Value], "  (equal, as in the notebook)", "  (custom)" ) & IF ( [Weight SS Value] + [Weight Income Value] + [Weight Food Value] = 0, "  · all weights are 0: index undefined", "" )
+		displayFolder: 2. Indicators
+		lineageTag: 839be364-9124-551c-b75c-983124bff8da
+
+	/// z-score of the social security rate across the 13 regions (population SD). Higher = more fragile.
+	measure 'Z SS Rate' =
+			VAR _all = ALL ( dim_region )
+			VAR _mu = AVERAGEX ( _all, [SS Rate (Scenario) %] )
+			VAR _sd = STDEVX.P ( _all, [SS Rate (Scenario) %] )
+			RETURN
+			    IF ( HASONEVALUE ( dim_region[region_id] ), DIVIDE ( [SS Rate (Scenario) %] - _mu, _sd ) )
+		formatString: 0.00
+		displayFolder: 3. Fragility
+		lineageTag: d1c1d499-c69c-53a0-9e87-461a464c81b3
+
+	/// Negative z-score of Saudi median income, so higher = more fragile.
+	measure 'Z Low Income' =
+			VAR _all = ALL ( dim_region )
+			VAR _mu = AVERAGEX ( _all, [Median Income (Saudi)] )
+			VAR _sd = STDEVX.P ( _all, [Median Income (Saudi)] )
+			RETURN
+			    IF ( HASONEVALUE ( dim_region[region_id] ), -DIVIDE ( [Median Income (Saudi)] - _mu, _sd ) )
+		formatString: 0.00
+		displayFolder: 3. Fragility
+		lineageTag: 2b13cf0b-00df-566c-9f4d-22897ef14b15
+
+	/// z-score of the food share of spending. Higher = more fragile.
+	measure 'Z Food Share' =
+			VAR _all = ALL ( dim_region )
+			VAR _mu = AVERAGEX ( _all, [Food Share %] )
+			VAR _sd = STDEVX.P ( _all, [Food Share %] )
+			RETURN
+			    IF ( HASONEVALUE ( dim_region[region_id] ), DIVIDE ( [Food Share %] - _mu, _sd ) )
+		formatString: 0.00
+		displayFolder: 3. Fragility
+		lineageTag: 1c3ef054-099a-56b7-9861-73549c8ee313
+
+	/// Composite economic fragility: weighted mean of the three z-scores (equal weights = notebook). 0 = average of the 13 regions.
+	measure 'Fragility Index' =
+			VAR _w1 = [Weight SS Value]
+			VAR _w2 = [Weight Income Value]
+			VAR _w3 = [Weight Food Value]
+			RETURN
+			    IF ( HASONEVALUE ( dim_region[region_id] ), DIVIDE ( _w1 * [Z SS Rate] + _w2 * [Z Low Income] + _w3 * [Z Food Share], _w1 + _w2 + _w3 ) )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 3. Fragility
+		lineageTag: ce43efe2-dda6-50bb-bfcf-fead2703d7db
+
+	/// 1 = most fragile region.
+	measure 'Fragility Rank' = IF ( HASONEVALUE ( dim_region[region_id] ), RANKX ( ALL ( dim_region ), [Fragility Index], , DESC, SKIP ) )
+		formatString: 0
+		displayFolder: 3. Fragility
+		lineageTag: 7093e43d-07fd-5130-a4f2-f161211cd115
+
+	/// 1 = highest social security rate 2022.
+	measure 'SS Rate Rank' = IF ( HASONEVALUE ( dim_region[region_id] ), RANKX ( ALL ( dim_region ), [SS Rate 2022 %], , DESC, SKIP ) )
+		formatString: 0
+		displayFolder: 3. Fragility
+		lineageTag: 570fa8a9-94ea-5861-b414-44f36859139d
+
+	/// 1 = lowest Saudi median income.
+	measure 'Income Rank' = IF ( HASONEVALUE ( dim_region[region_id] ), RANKX ( ALL ( dim_region ), [Median Income (Saudi)], , ASC, SKIP ) )
+		formatString: 0
+		displayFolder: 3. Fragility
+		lineageTag: cbebd3e2-bbef-5ebe-9a18-9edf4bb190b8
+
+	/// 1 = highest food share of spending.
+	measure 'Food Share Rank' = IF ( HASONEVALUE ( dim_region[region_id] ), RANKX ( ALL ( dim_region ), [Food Share %], , DESC, SKIP ) )
+		formatString: 0
+		displayFolder: 3. Fragility
+		lineageTag: 14303fb8-ae00-591a-9fff-266edc248c7e
+
+	/// Orange when more fragile than the 13-region average.
+	measure 'Fragility Color' = IF ( HASONEVALUE ( dim_region[region_id] ), IF ( [Fragility Index] > 0, "#EB6834", "#B4B2A9" ) )
+		displayFolder: 3. Fragility
+		lineageTag: 5f16643e-cd89-5fcc-bb43-aaeee4b6133b
+
+	/// Table background: dark orange >= 1, light orange > 0.
+	measure 'Fragility Cell Color' = VAR _f = [Fragility Index] RETURN SWITCH ( TRUE (), ISBLANK ( _f ), BLANK (), _f >= 1, "#F08A5D", _f > 0, "#FBD3C2", "#FFFFFF" )
+		displayFolder: 3. Fragility
+		lineageTag: da859991-c01a-5f14-8e68-5c54666fa5b0
+
+	/// Region with the highest fragility index.
+	measure 'Most Fragile Region' = MAXX ( FILTER ( ALL ( dim_region ), [Fragility Rank] = 1 ), dim_region[region_en] )
+		displayFolder: 3. Fragility
+		lineageTag: 2d70f908-edbe-5d75-866c-7eeb3594e43e
+
+	/// Region with the lowest Saudi median income and its value.
+	measure 'Lowest Income Region' = VAR _r = TOPN ( 1, ALL ( dim_region ), [Median Income (Saudi)], ASC ) RETURN MAXX ( _r, dim_region[region_en] ) & " · SAR " & FORMAT ( MAXX ( _r, [Median Income (Saudi)] ), "#,0" )
+		displayFolder: 3. Fragility
+		lineageTag: eee9f784-5c34-59dc-baad-c860e2e3e8de
+
+	/// Region with the highest food share and its value.
+	measure 'Highest Food Share Region' = VAR _r = TOPN ( 1, ALL ( dim_region ), [Food Share %], DESC ) RETURN MAXX ( _r, dim_region[region_en] ) & " · " & FORMAT ( MAXX ( _r, [Food Share %] ), "0.0%" )
+		displayFolder: 3. Fragility
+		lineageTag: 18e9df87-2a31-55ec-9aa8-d245ee423fe1
+
+	/// z-score of the fragility index across the 13 regions (the 'fragility part' of the gap).
+	measure 'Z Fragility' =
+			VAR _all = ALL ( dim_region )
+			VAR _mu = AVERAGEX ( _all, [Fragility Index] )
+			VAR _sd = STDEVX.P ( _all, [Fragility Index] )
+			RETURN
+			    IF ( HASONEVALUE ( dim_region[region_id] ), DIVIDE ( [Fragility Index] - _mu, _sd ) )
+		formatString: 0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: 5dafa661-09ae-540c-b0cf-c407481a1e7d
+
+	/// z-score of non-profit density across the 13 regions.
+	measure 'Z Density' =
+			VAR _all = ALL ( dim_region )
+			VAR _mu = AVERAGEX ( _all, [Density (Scenario)] )
+			VAR _sd = STDEVX.P ( _all, [Density (Scenario)] )
+			RETURN
+			    IF ( HASONEVALUE ( dim_region[region_id] ), DIVIDE ( [Density (Scenario)] - _mu, _sd ) )
+		formatString: 0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: c7536d3e-4a5e-56c6-97cc-15aac9f6f522
+
+	/// Contribution of fragility to the gap score.
+	measure 'Fragility Part' = [Z Fragility]
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: cf59c06a-eea6-5921-aca9-f61f1d6889cc
+
+	/// Contribution of low non-profit density to the gap score.
+	measure 'Few Non-profits Part' = - [Z Density]
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: 4f608da5-faa9-5d75-a362-2763c82c6193
+
+	/// Priority gap = standardized fragility - standardized density. Higher = more fragile relative to its non-profit base.
+	measure 'Gap Score' = [Z Fragility] - [Z Density]
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: 0e35d9a3-c03f-5392-9dfe-661e0cd50720
+
+	/// 1 = largest gap (ties share the lowest rank, as pandas method='min').
+	measure 'Gap Rank' = IF ( HASONEVALUE ( dim_region[region_id] ), RANKX ( ALL ( dim_region ), [Gap Score], , DESC, SKIP ) )
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: 3ee5a923-8bcf-5d4f-af56-9a1991c6f21f
+
+	/// Which part of the gap is larger.
+	measure 'Gap Source' = IF ( HASONEVALUE ( dim_region[region_id] ), IF ( [Fragility Part] > [Few Non-profits Part], "Fragility", "Few non-profits" ) )
+		displayFolder: 4. Gap & Priority
+		lineageTag: ef086212-8b2f-5ba2-aeab-a5a960633a4a
+
+	/// 1 when the region is in the top 5 by gap.
+	measure 'Is Top 5' = IF ( NOT ISBLANK ( [Gap Rank] ), IF ( [Gap Rank] <= 5, 1, 0 ) )
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: 08dfcebc-bea9-5d5b-9779-d44421532a45
+
+	/// 1 = lowest non-profit density.
+	measure 'Density Rank' = IF ( HASONEVALUE ( dim_region[region_id] ), RANKX ( ALL ( dim_region ), [Density (Scenario)], , ASC, SKIP ) )
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: 9b463ff5-ca1e-5e34-aa21-0fc583c801a9
+
+	/// Median fragility index of the 13 regions (quadrant line).
+	measure 'Median Fragility' = MEDIANX ( ALL ( dim_region ), [Fragility Index] )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: 85bc4e72-91ea-5514-8686-5a6c19d62f70
+
+	/// Median density of the 13 regions (quadrant line).
+	measure 'Median Density' = MEDIANX ( ALL ( dim_region ), [Density (Scenario)] )
+		formatString: 0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: b21698a6-fc5c-5a8b-910d-f52197df5c7d
+
+	/// Descriptive quadrant against the two medians (not used for the decision).
+	measure Quadrant =
+			IF (
+			    HASONEVALUE ( dim_region[region_id] ),
+			    VAR _hf = [Fragility Index] > [Median Fragility]
+			    VAR _ld = [Density (Scenario)] < [Median Density]
+			    RETURN
+			        SWITCH (
+			            TRUE (),
+			            _hf && _ld, "High fragility, few organizations",
+			            _hf, "High fragility, many organizations",
+			            _ld, "Low fragility, few organizations",
+			            "Low fragility, many organizations"
+			        )
+			)
+		displayFolder: 4. Gap & Priority
+		lineageTag: ccb1ba65-99de-5510-a347-40a7512be1a9
+
+	/// Region ranked #1 by gap in the active scenario.
+	measure 'Top Priority Region' = MAXX ( FILTER ( ALL ( dim_region ), [Gap Rank] = 1 ), dim_region[region_en] )
+		displayFolder: 4. Gap & Priority
+		lineageTag: 7b7de7ba-9f6e-53e8-9205-72a7f3f23f51
+
+	/// Gap score of the #1 region.
+	measure 'Top Priority Gap' = MAXX ( FILTER ( ALL ( dim_region ), [Gap Rank] = 1 ), [Gap Score] )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: 93da4bb2-d806-5123-bec1-420d58e25ef6
+
+	/// How far the #1 region is ahead of #2.
+	measure 'Lead Over Second' = [Top Priority Gap] - MAXX ( FILTER ( ALL ( dim_region ), [Gap Rank] = 2 ), [Gap Score] )
+		formatString: 0.00
+		displayFolder: 4. Gap & Priority
+		lineageTag: 7fa8e73a-d38a-520d-a017-f2a4308af7f2
+
+	/// Top 5 regions by gap, in rank order.
+	measure 'Top 5 Regions' = CONCATENATEX ( FILTER ( ALL ( dim_region ), [Gap Rank] <= 5 ), dim_region[region_en], ", ", [Gap Rank], ASC )
+		displayFolder: 4. Gap & Priority
+		lineageTag: c84c0d9d-4146-55c7-b56d-2e410c47073d
+
+	/// Number of scenarios A-D in which the region is in the top 5.
+	measure 'Scenarios in Top 5' = IF ( HASONEVALUE ( dim_region[region_id] ), COUNTROWS ( FILTER ( ALL ( dim_scenario ), CALCULATE ( [Gap Rank] ) <= 5 ) ) + 0 )
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: 5b7cda2c-93ce-5440-ba59-35f4513e9353
+
+	/// Orange = top 5 driven by fragility; blue = top 5 driven by few non-profits; grey = others.
+	measure 'Priority Color' = IF ( HASONEVALUE ( dim_region[region_id] ), IF ( [Gap Rank] <= 5, IF ( [Gap Source] = "Fragility", "#EB6834", "#2A78D6" ), "#B4B2A9" ) )
+		displayFolder: 4. Gap & Priority
+		lineageTag: ea1ee270-84e4-5e83-a519-ad59dc894705
+
+	/// Colour of the final (stable) priority group from the notebook.
+	measure 'Stable Group Color' = SWITCH ( SELECTEDVALUE ( dim_region[priority_group] ), "Fragility + few non-profits", "#EB6834", "Mainly few non-profits", "#2A78D6", "#B4B2A9" )
+		displayFolder: 4. Gap & Priority
+		lineageTag: fb8ce733-1d20-5256-b80b-0237bbd4bcb3
+
+	/// Tile-map column.
+	measure 'Tile X' = MIN ( dim_region[tile_col] )
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: 785c47af-3625-5605-a31b-a2b449bc90cc
+
+	/// Tile-map row (negated so north is up).
+	measure 'Tile Y' = - MIN ( dim_region[tile_row] )
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: d6a85156-e926-5fc2-9184-8ce43f91f944
+
+	/// Constant bubble size for the tile map.
+	measure 'Tile Size' = 1
+		formatString: 0
+		displayFolder: 4. Gap & Priority
+		lineageTag: 42616b2f-609b-51ce-bfeb-2e85f5812a31
+
+	/// Gap rank in the selected sensitivity test.
+	measure 'Test Rank' = MIN ( fact_sensitivity_rank[gap_rank] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 3d65a620-edc4-52b7-81d8-5860399c9e67
+
+	/// Number of sensitivity tests (6).
+	measure 'Tests Run' = CALCULATE ( DISTINCTCOUNT ( fact_sensitivity_rank[test_id] ), REMOVEFILTERS ( dim_region ) )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 8d2a81ab-13fe-5c6d-954f-b616d5d4d435
+
+	/// Number of tests with the region in the top 5.
+	measure 'Tests in Top 5' = CALCULATE ( COUNTROWS ( fact_sensitivity_rank ), fact_sensitivity_rank[gap_rank] <= 5 ) + 0
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 1da368c5-3f6c-5699-a176-fa2b32f1afa6
+
+	/// Best rank over the six tests.
+	measure 'Best Rank Across Tests' = MIN ( fact_sensitivity_rank[gap_rank] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 0e19fe15-8366-5ab6-b8d1-b7489d70e845
+
+	/// Worst rank over the six tests.
+	measure 'Worst Rank Across Tests' = MAX ( fact_sensitivity_rank[gap_rank] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 2123f93b-ff95-5ae7-83da-f03bc9072be3
+
+	/// Regions in the top 5 in all tests but at most one (notebook rule).
+	measure 'Stable Priority Regions' = COUNTROWS ( FILTER ( VALUES ( dim_region[region_id] ), [Tests in Top 5] >= [Tests Run] - 1 ) )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 6e60e550-7e57-5dd6-904d-14d810821c01
+
+	/// Stable priority regions in baseline rank order.
+	measure 'Stable Priority List' = CONCATENATEX ( FILTER ( ALL ( dim_region ), [Tests in Top 5] >= [Tests Run] - 1 ), dim_region[region_en], ", ", dim_region[baseline_gap_rank], ASC )
+		displayFolder: 5. Robustness
+		lineageTag: 0315023f-e6ed-5392-b7db-a4db2505aa83
+
+	/// Matrix background: rank 1 dark orange, ranks 2-5 light orange.
+	measure 'Rank Cell Color' =
+			VAR _r = [Test Rank]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( _r ), BLANK (), _r = 1, "#F08A5D", _r <= 5, "#FBD3C2", "#FFFFFF" )
+		displayFolder: 5. Robustness
+		lineageTag: 1f79d845-8624-573b-a198-15159d7c4856
+
+	/// Matrix background for scenario ranks.
+	measure 'Gap Rank Cell Color' =
+			VAR _r = [Gap Rank]
+			RETURN
+			    SWITCH ( TRUE (), ISBLANK ( _r ), BLANK (), _r = 1, "#F08A5D", _r <= 5, "#FBD3C2", "#FFFFFF" )
+		displayFolder: 5. Robustness
+		lineageTag: 1f0f9096-095d-5848-b7e9-f975b279c04f
+
+	/// Share of 1,000 random weightings (seed 42) with the region in the top 5.
+	measure 'Random Weights Top 5 %' = DIVIDE ( SUM ( fact_robustness[weights_top5_pct] ), 100 * [Regions] )
+		formatString: 0.0%
+		displayFolder: 5. Robustness
+		lineageTag: 825a8379-ebea-5b5e-8c07-4a481cdd67ab
+
+	/// Median rank across the 1,000 weightings.
+	measure 'Random Weights Median Rank' = AVERAGE ( fact_robustness[weights_median_rank] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 9d7b7ccc-7df4-5d08-bfb2-4daeb88ed957
+
+	/// Best rank across the weightings.
+	measure 'Random Weights Best Rank' = MIN ( fact_robustness[weights_best] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: dc8e9905-30f2-5b27-9dfd-7b367d0929e7
+
+	/// Worst rank across the weightings.
+	measure 'Random Weights Worst Rank' = MAX ( fact_robustness[weights_worst] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 17772091-f8f7-59ef-abf7-baa2aee1f799
+
+	/// Times in the top 5 out of 12 leave-one-region-out runs.
+	measure 'Leave-One-Out Top 5' = SUM ( fact_robustness[loo_top5] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: cf168884-4833-5583-9a2f-7a828198fa87
+
+	/// Share of the 12 leave-one-region-out runs with the region in the top 5.
+	measure 'Leave-One-Out Top 5 %' = DIVIDE ( SUM ( fact_robustness[loo_top5] ), 12 * [Regions] )
+		formatString: 0.0%
+		displayFolder: 5. Robustness
+		lineageTag: 9100a337-9602-58de-a83f-4e3a76fabe19
+
+	/// Worst rank in leave-one-out.
+	measure 'Leave-One-Out Worst Rank' = MAX ( fact_robustness[loo_worst] )
+		formatString: 0
+		displayFolder: 5. Robustness
+		lineageTag: 7f1cc23a-dd6a-5fdb-b8e5-58ebc8fbcf13
+
+	/// Stable priority region that is least often in the top 5 under random weights.
+	measure 'Least Stable Priority' =
+			VAR _stable = FILTER ( ALL ( dim_region ), [Tests in Top 5] >= [Tests Run] - 1 )
+			VAR _r = TOPN ( 1, _stable, [Random Weights Top 5 %], ASC )
+			RETURN
+			    MAXX ( _r, dim_region[region_en] ) & " · " & FORMAT ( MAXX ( _r, [Random Weights Top 5 %] ), "0.0%" )
+		displayFolder: 5. Robustness
+		lineageTag: 68e7f7eb-e3f7-5fd7-aa03-ea485bafb813
+
+	/// Number of Dirichlet weight draws in the notebook (seed 42).
+	measure 'Random Weight Draws' = 1000
+		formatString: #,0
+		displayFolder: 5. Robustness
+		lineageTag: 20c4e325-3768-5118-873b-1280ceda350b
+
+	/// Alias used by the tile map.
+	measure 'Tile Stable Color' = [Stable Group Color]
+		displayFolder: 5. Robustness
+		lineageTag: df1d17ec-7cd4-5b41-a54b-bc5ac806b370
+
+	/// Social security beneficiaries in the years in context.
+	measure Beneficiaries = SUM ( fact_social_security[beneficiaries] )
+		formatString: #,0
+		displayFolder: 6. Trends
+		lineageTag: e6957420-bb31-5b27-89a5-4f6386d0484c
+
+	/// Beneficiaries in the previous year.
+	measure 'Beneficiaries PY' = VAR _y = MAX ( dim_year[year] ) RETURN CALCULATE ( [Beneficiaries], dim_year[year] = _y - 1 )
+		formatString: #,0
+		displayFolder: 6. Trends
+		lineageTag: 82d3f84e-d3e9-52d3-af98-2cc895f77cef
+
+	/// Year-over-year change in beneficiaries.
+	measure 'Beneficiaries YoY %' = DIVIDE ( [Beneficiaries] - [Beneficiaries PY], [Beneficiaries PY] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Trends
+		lineageTag: cc0ed978-e8ac-5a37-b074-a9d64b9378e8
+
+	/// Beneficiaries indexed to 2020 = 100 (2020-2022 only).
+	measure 'Beneficiaries Index 2020=100' = VAR _y = MAX ( dim_year[year] ) RETURN IF ( _y >= 2020, DIVIDE ( [Beneficiaries], CALCULATE ( [Beneficiaries], dim_year[year] = 2020 ) ) * 100 )
+		formatString: 0.0
+		displayFolder: 6. Trends
+		lineageTag: 546db131-f8f3-5d1f-800c-bb95ab866bc3
+
+	/// Change in beneficiaries from 2021 to 2022 (transition year).
+	measure 'Change 2021 to 2022 %' = DIVIDE ( CALCULATE ( [Beneficiaries], dim_year[year] = 2022 ), CALCULATE ( [Beneficiaries], dim_year[year] = 2021 ) ) - 1
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Trends
+		lineageTag: a997d1e2-f0a7-5904-893d-0446c7ed5175
+
+	/// Highest annual number of beneficiaries, 2005-2022.
+	measure 'Peak Beneficiaries' = MAXX ( ALL ( dim_year[year] ), [Beneficiaries] )
+		formatString: #,0
+		displayFolder: 6. Trends
+		lineageTag: e305575f-415b-5b15-b6d4-df18ce235f49
+
+	/// Year of the peak.
+	measure 'Peak Year' = MAXX ( TOPN ( 1, ALL ( dim_year[year] ), [Beneficiaries], DESC ), dim_year[year] )
+		formatString: 0
+		displayFolder: 6. Trends
+		lineageTag: 686f4646-1d48-59ed-8a4d-c8f2bac7e2ca
+
+	/// Change from the peak year to 2022.
+	measure 'Change Peak to 2022 %' = DIVIDE ( CALCULATE ( [Beneficiaries], dim_year[year] = 2022 ), [Peak Beneficiaries] ) - 1
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Trends
+		lineageTag: 17283aef-6fbe-5f9f-875a-5be66e2593d3
+
+	/// Saudi population in the years in context (2010-2022).
+	measure 'Saudi Population (Year)' = SUM ( fact_population[saudi_population] )
+		formatString: #,0
+		displayFolder: 6. Trends
+		lineageTag: 7cdf0006-a53d-5198-b260-f2543afa4cb3
+
+	/// Total population in the years in context (2010-2022).
+	measure 'Population (Year)' = SUM ( fact_population[population] )
+		formatString: #,0
+		displayFolder: 6. Trends
+		lineageTag: 3c7a8098-5306-5302-af70-70dbafed1b89
+
+	/// Beneficiaries / Saudi population for each year 2010-2022.
+	measure 'SS Rate (Year) %' = DIVIDE ( [Beneficiaries], [Saudi Population (Year)] )
+		formatString: 0.00%
+		displayFolder: 6. Trends
+		lineageTag: 4c2bfd39-88cd-57d8-bdf9-f0b0558ca3fa
+
+	/// Rank correlation between organization counts and population (notebook 4.2: 0.87).
+	measure 'Spearman Orgs vs Population' =
+			VAR _t =
+			    ADDCOLUMNS ( ALL ( dim_region ), "@x", [Organizations (All Types)], "@y", [Population 2022] )
+			VAR _r =
+			    ADDCOLUMNS (
+			        _t,
+			        "@rx", VAR _cx = [@x] RETURN COUNTROWS ( FILTER ( _t, [@x] < _cx ) ) + ( COUNTROWS ( FILTER ( _t, [@x] = _cx ) ) + 1 ) / 2,
+			        "@ry", VAR _cy = [@y] RETURN COUNTROWS ( FILTER ( _t, [@y] < _cy ) ) + ( COUNTROWS ( FILTER ( _t, [@y] = _cy ) ) + 1 ) / 2
+			    )
+			VAR _mx = AVERAGEX ( _r, [@rx] )
+			VAR _my = AVERAGEX ( _r, [@ry] )
+			VAR _cov = SUMX ( _r, ( [@rx] - _mx ) * ( [@ry] - _my ) )
+			VAR _sx = SQRT ( SUMX ( _r, ( [@rx] - _mx ) ^ 2 ) )
+			VAR _sy = SQRT ( SUMX ( _r, ( [@ry] - _my ) ^ 2 ) )
+			RETURN
+			    DIVIDE ( _cov, _sx * _sy )
+		formatString: 0.00
+		displayFolder: 7. Statistics
+		lineageTag: d9272d6d-eac1-590d-abf3-e3b34274df66
+
+	/// Rank correlation between Saudi median income and food share (notebook 4.4: -0.64).
+	measure 'Spearman Income vs Food Share' =
+			VAR _t =
+			    ADDCOLUMNS ( ALL ( dim_region ), "@x", [Median Income (Saudi)], "@y", [Food Share %] )
+			VAR _r =
+			    ADDCOLUMNS (
+			        _t,
+			        "@rx", VAR _cx = [@x] RETURN COUNTROWS ( FILTER ( _t, [@x] < _cx ) ) + ( COUNTROWS ( FILTER ( _t, [@x] = _cx ) ) + 1 ) / 2,
+			        "@ry", VAR _cy = [@y] RETURN COUNTROWS ( FILTER ( _t, [@y] < _cy ) ) + ( COUNTROWS ( FILTER ( _t, [@y] = _cy ) ) + 1 ) / 2
+			    )
+			VAR _mx = AVERAGEX ( _r, [@rx] )
+			VAR _my = AVERAGEX ( _r, [@ry] )
+			VAR _cov = SUMX ( _r, ( [@rx] - _mx ) * ( [@ry] - _my ) )
+			VAR _sx = SQRT ( SUMX ( _r, ( [@rx] - _mx ) ^ 2 ) )
+			VAR _sy = SQRT ( SUMX ( _r, ( [@ry] - _my ) ^ 2 ) )
+			RETURN
+			    DIVIDE ( _cov, _sx * _sy )
+		formatString: 0.00
+		displayFolder: 7. Statistics
+		lineageTag: 6feef956-460f-50bb-93ec-989bc428b72d
+
+	/// Stability of regional social security rates (notebook 4.3: 0.99).
+	measure 'Spearman SS Rate 2020 vs 2022' =
+			VAR _t =
+			    ADDCOLUMNS ( ALL ( dim_region ), "@x", CALCULATE ( [SS Rate (Year) %], dim_year[year] = 2020 ), "@y", CALCULATE ( [SS Rate (Year) %], dim_year[year] = 2022 ) )
+			VAR _r =
+			    ADDCOLUMNS (
+			        _t,
+			        "@rx", VAR _cx = [@x] RETURN COUNTROWS ( FILTER ( _t, [@x] < _cx ) ) + ( COUNTROWS ( FILTER ( _t, [@x] = _cx ) ) + 1 ) / 2,
+			        "@ry", VAR _cy = [@y] RETURN COUNTROWS ( FILTER ( _t, [@y] < _cy ) ) + ( COUNTROWS ( FILTER ( _t, [@y] = _cy ) ) + 1 ) / 2
+			    )
+			VAR _mx = AVERAGEX ( _r, [@rx] )
+			VAR _my = AVERAGEX ( _r, [@ry] )
+			VAR _cov = SUMX ( _r, ( [@rx] - _mx ) * ( [@ry] - _my ) )
+			VAR _sx = SQRT ( SUMX ( _r, ( [@rx] - _mx ) ^ 2 ) )
+			VAR _sy = SQRT ( SUMX ( _r, ( [@ry] - _my ) ^ 2 ) )
+			RETURN
+			    DIVIDE ( _cov, _sx * _sy )
+		formatString: 0.00
+		displayFolder: 7. Statistics
+		lineageTag: 67f2263e-363d-5c23-b570-5a8df10af3f3
+
+	/// Stability of regional social security rates (notebook 4.3: 0.94).
+	measure 'Spearman SS Rate 2021 vs 2022' =
+			VAR _t =
+			    ADDCOLUMNS ( ALL ( dim_region ), "@x", CALCULATE ( [SS Rate (Year) %], dim_year[year] = 2021 ), "@y", CALCULATE ( [SS Rate (Year) %], dim_year[year] = 2022 ) )
+			VAR _r =
+			    ADDCOLUMNS (
+			        _t,
+			        "@rx", VAR _cx = [@x] RETURN COUNTROWS ( FILTER ( _t, [@x] < _cx ) ) + ( COUNTROWS ( FILTER ( _t, [@x] = _cx ) ) + 1 ) / 2,
+			        "@ry", VAR _cy = [@y] RETURN COUNTROWS ( FILTER ( _t, [@y] < _cy ) ) + ( COUNTROWS ( FILTER ( _t, [@y] = _cy ) ) + 1 ) / 2
+			    )
+			VAR _mx = AVERAGEX ( _r, [@rx] )
+			VAR _my = AVERAGEX ( _r, [@ry] )
+			VAR _cov = SUMX ( _r, ( [@rx] - _mx ) * ( [@ry] - _my ) )
+			VAR _sx = SQRT ( SUMX ( _r, ( [@rx] - _mx ) ^ 2 ) )
+			VAR _sy = SQRT ( SUMX ( _r, ( [@ry] - _my ) ^ 2 ) )
+			RETURN
+			    DIVIDE ( _cov, _sx * _sy )
+		formatString: 0.00
+		displayFolder: 7. Statistics
+		lineageTag: 8eb10eea-d8cb-5118-8c36-51848a424446
+
+	/// Fragility with 2022 vs 2020-22 social security rate (notebook 6: 0.99).
+	measure 'Spearman Fragility 2022 vs Avg' =
+			VAR _t =
+			    ADDCOLUMNS ( ALL ( dim_region ), "@x", CALCULATE ( [Fragility Index], REMOVEFILTERS ( dim_scenario ), dim_scenario[scenario] = "A" ), "@y", CALCULATE ( [Fragility Index], REMOVEFILTERS ( dim_scenario ), dim_scenario[scenario] = "C" ) )
+			VAR _r =
+			    ADDCOLUMNS (
+			        _t,
+			        "@rx", VAR _cx = [@x] RETURN COUNTROWS ( FILTER ( _t, [@x] < _cx ) ) + ( COUNTROWS ( FILTER ( _t, [@x] = _cx ) ) + 1 ) / 2,
+			        "@ry", VAR _cy = [@y] RETURN COUNTROWS ( FILTER ( _t, [@y] < _cy ) ) + ( COUNTROWS ( FILTER ( _t, [@y] = _cy ) ) + 1 ) / 2
+			    )
+			VAR _mx = AVERAGEX ( _r, [@rx] )
+			VAR _my = AVERAGEX ( _r, [@ry] )
+			VAR _cov = SUMX ( _r, ( [@rx] - _mx ) * ( [@ry] - _my ) )
+			VAR _sx = SQRT ( SUMX ( _r, ( [@rx] - _mx ) ^ 2 ) )
+			VAR _sy = SQRT ( SUMX ( _r, ( [@ry] - _my ) ^ 2 ) )
+			RETURN
+			    DIVIDE ( _cov, _sx * _sy )
+		formatString: 0.00
+		displayFolder: 7. Statistics
+		lineageTag: 127af37d-3987-5dae-aae4-a103a1079568
+
+	/// Population of the largest region / smallest region (notebook 4.2: 25x).
+	measure 'Largest to Smallest Population' = DIVIDE ( MAXX ( ALL ( dim_region ), [Population 2022] ), MINX ( ALL ( dim_region ), [Population 2022] ) )
+		formatString: 0
+		displayFolder: 7. Statistics
+		lineageTag: 0dd60e63-231b-53c3-af03-e4d8931e5243
+
+	/// Dynamic visual title.
+	measure 'Title Gap Chart' = "Gap score by region · scenario " & [Selected Scenario]
+		displayFolder: 8. Titles
+		lineageTag: c7a8d571-0202-59e8-85ee-0d386ddba3c0
+
+	/// Dynamic page title on the profile page.
+	measure 'Title Profile' = IF ( HASONEVALUE ( dim_region[region_en] ), "Region profile · " & VALUES ( dim_region[region_en] ) & "  (" & VALUES ( dim_region[region_ar] ) & ")", "Region profile · select one region" )
+		displayFolder: 8. Titles
+		lineageTag: 06b5e47b-7126-5d8b-9050-eaa2124bddb8
+
+	/// Population 2022 in millions as text (locale-independent card label).
+	measure 'Population 2022 Label' = FORMAT ( [Population 2022] / 1000000, "0.0" ) & "M"
+		displayFolder: 8. Titles
+		lineageTag: a5f4ffd8-8acd-5d24-ac1f-afab90f0e7b1
+
+	/// Region name on the tooltip page.
+	measure 'Title Tooltip' = IF ( HASONEVALUE ( dim_region[region_en] ), VALUES ( dim_region[region_en] ) & "  ·  " & VALUES ( dim_region[region_ar] ) )
+		displayFolder: 8. Titles
+		lineageTag: 1d2d2c68-9ada-5f1f-ab1c-4f848ea65d71
+
+	/// Rank summary line on the tooltip page.
+	measure 'Tooltip Rank Line' = IF ( HASONEVALUE ( dim_region[region_en] ), "Gap rank " & [Gap Rank] & " of 13  ·  " & [Gap Source] & "  ·  scenario " & [Selected Scenario] )
+		displayFolder: 8. Titles
+		lineageTag: 375d4ede-195e-5941-908f-b9b4fc8acfaa
+
+	/// Dynamic title of the drill-through page.
+	measure 'Title Drillthrough' = IF ( HASONEVALUE ( dim_region[region_en] ), "Region detail · " & VALUES ( dim_region[region_en] ) & "  (" & VALUES ( dim_region[region_ar] ) & ")", "Region detail · right-click a region on the dashboard > Drill through" )
+		displayFolder: 8. Titles
+		lineageTag: 6ce7dfe2-ee3d-583c-8754-d38673052eab
+
+	/// Final priority group of the selected region.
+	measure 'Profile Group' = IF ( HASONEVALUE ( dim_region[region_en] ), VALUES ( dim_region[priority_group] ) )
+		displayFolder: 8. Titles
+		lineageTag: fda48796-8f0d-56de-9a49-739f62320617
+
+	column Dummy
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cf9a6c58-d155-5d83-9fd8-c1a29894c1eb
+		summarizeBy: none
+		sourceColumn: Dummy
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Dummy = Int64.Type], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

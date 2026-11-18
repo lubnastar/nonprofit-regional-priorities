@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "RegionalPriorities"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "22d3ce99-259b-53b3-969d-6535b548af25"
+  }
+}

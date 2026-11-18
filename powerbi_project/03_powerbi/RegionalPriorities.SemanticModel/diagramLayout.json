@@ -1,0 +1,217 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1338.0382837067832,
+            "y": 492.30830468016507
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "4f5e5281-ddea-57a0-b761-4b3cf8588e8f",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 603.99165611306864,
+            "y": 586.05992232958693
+          },
+          "nodeIndex": "dim_org_type",
+          "nodeLineageTag": "656dc47b-a740-53f4-9736-6e60e6f918c3",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 643.65717251178614,
+            "y": 260.85197304263568
+          },
+          "nodeIndex": "dim_region",
+          "nodeLineageTag": "6cff3890-7236-5cd9-9c0c-a59f50a1ac58",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1622.0382837067832,
+            "y": 542.30830468016507
+          },
+          "nodeIndex": "dim_scenario",
+          "nodeLineageTag": "acb7b948-bf51-5627-85a9-de08114a9997",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 18.919945593891953
+          },
+          "nodeIndex": "dim_sensitivity_test",
+          "nodeLineageTag": "e1bcfa70-c6f5-5d48-91af-08095e8d1a17",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1104.0382837067832,
+            "y": -50
+          },
+          "nodeIndex": "dim_year",
+          "nodeLineageTag": "7220f25b-011f-501e-a6b7-7c69c6fcf368",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 598.48956331560862,
+            "y": 1010.6166093603301
+          },
+          "nodeIndex": "fact_organizations",
+          "nodeLineageTag": "98fb585d-31c2-58c5-be9f-31479af809e7",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1039.1289015172588,
+            "y": 259.76317107787634
+          },
+          "nodeIndex": "fact_population",
+          "nodeLineageTag": "35576af8-981e-5ed1-92c5-52dc019ce45d",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 888.44799046824551,
+            "y": 790.18039420982609
+          },
+          "nodeIndex": "fact_region_snapshot",
+          "nodeLineageTag": "e0977d8f-9261-5ab3-ae4c-84027b46124d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 315.08074839125044,
+            "y": 618.42638295706649
+          },
+          "nodeIndex": "fact_robustness",
+          "nodeLineageTag": "6fb3642c-a651-58dc-a3d3-9ca8fcebc850",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 243.17410524500133,
+            "y": 288.20747836986152
+          },
+          "nodeIndex": "fact_sensitivity_rank",
+          "nodeLineageTag": "a668dfa1-7008-5fb1-8ef8-90dce3413844",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 814.10780306627282,
+            "y": 53.343780828713079
+          },
+          "nodeIndex": "fact_social_security",
+          "nodeLineageTag": "590c1fc5-00a1-584f-93cb-aeddb335b8de",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1906.0382837067832,
+            "y": 542.30830468016507
+          },
+          "nodeIndex": "Weight Food",
+          "nodeLineageTag": "3418dc50-e782-5546-b8df-68b6d8e11744",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2190.0382837067832,
+            "y": 542.30830468016507
+          },
+          "nodeIndex": "Weight Income",
+          "nodeLineageTag": "97b40a12-7e9b-5d42-adab-66867ced7b49",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2474.0382837067832,
+            "y": 542.30830468016507
+          },
+          "nodeIndex": "Weight SS",
+          "nodeLineageTag": "e4c31fc7-378f-5297-a5dd-48515be20019",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

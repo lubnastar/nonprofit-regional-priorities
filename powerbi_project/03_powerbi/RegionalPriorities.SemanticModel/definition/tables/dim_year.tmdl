@@ -1,0 +1,60 @@
+/// Year dimension 2005-2022 (all time series in the data are annual).
+table dim_year
+	lineageTag: 7220f25b-011f-501e-a6b7-7c69c6fcf368
+
+	/// Calendar year
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 1661059f-6fd4-556f-a967-8b1159afbf13
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	/// 1 January of the year
+	column year_start
+		dataType: dateTime
+		isHidden
+		formatString: Long Date
+		lineageTag: a994d061-d7a0-50c4-a7f1-0c9dad823499
+		summarizeBy: none
+		sourceColumn: year_start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// 2005-2019 or the 2020-2022 averaging window
+	column period
+		dataType: string
+		lineageTag: cf9110c6-a7c8-5833-ba92-d61c517e5879
+		summarizeBy: none
+		sourceColumn: period
+
+		annotation SummarizationSetBy = Automatic
+
+	/// TRUE for 2022, the transition to the new social security system
+	column is_transition_year
+		dataType: boolean
+		lineageTag: 015ebae2-da22-5069-a803-fc9f287a3e09
+		summarizeBy: none
+		sourceColumn: is_transition_year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_year = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "lZBNCsIwEIX3hd6hB4iQmdb+XMATuC+BhhKQVJLY4tlceCSvYF9d6MYRITyGl+9tvsftfrUmKEQfkwlJnW1w06Bc7FMwPrrkJt/jP89Y671C7DSt73Wypk4dzCnaDajR1gLQoG0EoEXbCkCHtvsOkFYIAUBLJAAMgAWgBFAKQAWgEgCYJMEkwSQJJgkmSTBJMEmCSYJJEkwyTPLb5HquwYWZbTCj82OxOD9My8diw+ifBVwz/14cw8Xm2RM=",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\dim_year.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"year", Int64.Type}, {"year_start", type date}, {"period", type text}, {"is_transition_year", type logical}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

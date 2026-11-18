@@ -1,0 +1,50 @@
+/// Organization type: association or foundation.
+table dim_org_type
+	lineageTag: 656dc47b-a740-53f4-9736-6e60e6f918c3
+
+	/// Organization type key
+	column org_type_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2be4fcda-892a-526f-8ffd-0b0c51f40899
+		summarizeBy: none
+		sourceColumn: org_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Association or Foundation
+	column org_type
+		dataType: string
+		lineageTag: a42a3afd-a500-5bd5-94cf-80a5d0d540ca
+		summarizeBy: none
+		sourceColumn: org_type
+		sortByColumn: org_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Arabic label
+	column org_type_ar
+		dataType: string
+		lineageTag: 02b1bf49-be3e-5508-96c3-cdde85877804
+		summarizeBy: none
+		sourceColumn: org_type_ar
+		sortByColumn: org_type_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_org_type = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "e797f35RenxJZUFqfGaKDowNZ8QnFvFyGeo4FhfnJ2cmlmTm5+ncWHOz9cbOm103VircWHyz/WYLiMnLZaTjll+alwJRA1Sx5MZmIERVAwA=",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\dim_org_type.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"org_type_id", Int64.Type}, {"org_type", type text}, {"org_type_ar", type text}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

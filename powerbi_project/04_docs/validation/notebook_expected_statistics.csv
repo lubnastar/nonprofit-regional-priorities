@@ -1,0 +1,14 @@
+statistic,notebook_value
+spearman_orgs_vs_population,0.8693268196515526
+spearman_income_vs_food_share,-0.6373626373626374
+spearman_ss_rate_2020_vs_2022,0.9945054945054945
+spearman_ss_rate_2021_vs_2022,0.9395604395604396
+spearman_fragility_2022_vs_avg,0.989010989010989
+national_beneficiaries_2021,1552415.0
+national_beneficiaries_2022,1107071.0
+total_organizations,2723.0
+total_population_2022,32175224.0
+riyadh_share_of_orgs_pct,29.30591259640103
+riyadh_share_of_foundations_pct,60.07326007326007
+median_fragility_2022,0.09405455877515735
+median_density_all,10.533830321345881

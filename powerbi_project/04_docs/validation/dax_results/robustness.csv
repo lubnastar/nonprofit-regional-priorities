@@ -1,0 +1,14 @@
+"region_id","region_en","tests_top5","best","worst","weights_top5_pct","loo_top5","loo_worst"
+1,"Riyadh",0,12,13,0,0,12
+2,"Makkah",5,3,6,0.96200000000000008,11,6
+3,"Madinah",6,2,5,1,12,3
+4,"Qassim",0,11,13,0,0,11
+5,"Eastern Province",0,6,10,0,0,10
+6,"Asir",0,6,11,0.196,0,7
+7,"Tabuk",6,2,5,0.838,12,5
+8,"Hail",0,7,10,0,0,10
+9,"Northern Borders",0,9,10,0,0,9
+10,"Jazan",5,2,6,0.72899999999999987,12,4
+11,"Najran",6,1,1,1,12,1
+12,"Al-Baha",0,9,13,0,0,12
+13,"Al-Jouf",2,5,8,0.275,6,8

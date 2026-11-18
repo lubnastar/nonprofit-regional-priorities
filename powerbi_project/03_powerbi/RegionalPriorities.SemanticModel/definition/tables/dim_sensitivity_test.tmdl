@@ -1,0 +1,69 @@
+/// The six sensitivity tests of notebook section 8.1.
+table dim_sensitivity_test
+	lineageTag: e1bcfa70-c6f5-5d48-91af-08095e8d1a17
+
+	/// Test key
+	column test_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e0bd2ec1-6cbe-5963-8b5b-acc8a591eb37
+		summarizeBy: none
+		sourceColumn: test_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column name used in the notebook
+	column test_key
+		dataType: string
+		isHidden
+		lineageTag: a5b98212-1bd9-5dd8-9ec3-f644055753d3
+		summarizeBy: none
+		sourceColumn: test_key
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Test name
+	column test_name
+		dataType: string
+		lineageTag: 8db50a66-761f-5118-ab05-b502715faceb
+		summarizeBy: none
+		sourceColumn: test_name
+		sortByColumn: test_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Short test name for matrix headers
+	column test_short
+		dataType: string
+		lineageTag: db8d0123-51a6-5239-9a95-8264faea503a
+		summarizeBy: none
+		sourceColumn: test_short
+		sortByColumn: test_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// What the test changes versus the base
+	column what_changes
+		dataType: string
+		lineageTag: dfe9e615-c3a7-5382-a910-eff988d9c67b
+		summarizeBy: none
+		sourceColumn: what_changes
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_sensitivity_test = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "XVE7bsMwDN0N+A4cW1QZ+t0TtGOLoBk6GqzEWEQcySVlBMnVOvRIvULlTxygg6RHPvLxo9/vn0SaKnZmeHd0HEHAPY1IfZRkDh5TZT2GmrQsbs0nKplVvuBKLQUUjrC8Hjzm5avDZnEgrn2C00JtFFKIW0ie8hEi2ArW3HA6AgfHFlOULHtnQqxUzQcnH7sEGi1jA0q2kxxr3iJsNuZZYjtI/aNBMFFZ3PciHGzMA5yFJjPnT2jQ2GDnGPbkGMNElMVDn76N0c3JvQHqUQaBgZpbuHD9fNpSnibUZfFo2qbTao9SczDrjKcCMLlu4HUES+dmikOOO4sAKmAu0Enyly2VxZMRDDutQkzVybz3ONOaCF3fw3nfI2PWJPl7EjcEQxoItQ1amuPK4g8=",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\dim_sensitivity_test.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"test_id", Int64.Type}, {"test_key", type text}, {"test_name", type text}, {"test_short", type text}, {"what_changes", type text}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

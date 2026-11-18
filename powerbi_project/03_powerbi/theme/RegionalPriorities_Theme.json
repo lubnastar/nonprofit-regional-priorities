@@ -1,0 +1,111 @@
+{
+  "name": "RegionalPriorities",
+  "dataColors": [
+    "#EB6834",
+    "#2A78D6",
+    "#B4B2A9",
+    "#1BAF7A",
+    "#7E57C2",
+    "#F2C14E",
+    "#5B5A56",
+    "#9BC2EA",
+    "#F6A988",
+    "#3D6E9E",
+    "#8C8A82",
+    "#C7E3D6",
+    "#D9C2F0"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#0B0B0B",
+  "tableAccent": "#EB6834",
+  "good": "#1BAF7A",
+  "neutral": "#B4B2A9",
+  "bad": "#EB6834",
+  "maximum": "#EB6834",
+  "center": "#FBD3C2",
+  "minimum": "#FFFFFF",
+  "textClasses": {
+    "callout": {
+      "fontSize": 22,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#0B0B0B"
+    },
+    "title": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#0B0B0B"
+    },
+    "header": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#0B0B0B"
+    },
+    "label": {
+      "fontSize": 9,
+      "fontFace": "Segoe UI",
+      "color": "#0B0B0B"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#E1E0D9"
+              }
+            },
+            "radius": 8
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "visualHeader": [
+          {
+            "show": true
+          }
+        ]
+      }
+    },
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F4F3EF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F4F3EF"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

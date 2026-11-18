@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DataFolder", "dim_region", "dim_year", "dim_org_type", "dim_sensitivity_test", "dim_scenario", "fact_region_snapshot", "fact_population", "fact_social_security", "fact_organizations", "fact_sensitivity_rank", "fact_robustness", "_Measures"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_region
+ref table dim_year
+ref table dim_org_type
+ref table dim_sensitivity_test
+ref table dim_scenario
+ref table fact_region_snapshot
+ref table fact_population
+ref table fact_social_security
+ref table fact_organizations
+ref table fact_sensitivity_rank
+ref table fact_robustness
+ref table 'Weight SS'
+ref table 'Weight Income'
+ref table 'Weight Food'
+ref table _Measures
+
+ref cultureInfo en-US
+

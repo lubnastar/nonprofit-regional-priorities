@@ -1,0 +1,52 @@
+/// Gap rank of each region in each of the six sensitivity tests (notebook 8.1).
+table fact_sensitivity_rank
+	lineageTag: a668dfa1-7008-5fb1-8ef8-90dce3413844
+
+	/// Region key
+	column region_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 52eda739-605d-5b49-a7f6-a6c226e4e80f
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Test key
+	column test_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b6c773ac-1554-5e19-bde9-36709878cae3
+		summarizeBy: none
+		sourceColumn: test_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Gap rank, 1 = largest gap (ties share the lowest rank)
+	column gap_rank
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ba35e877-9bae-5b5d-8a8f-3a916e23947a
+		summarizeBy: none
+		sourceColumn: gap_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sensitivity_rank = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "NdFLagMxEATQvUA38cLq34xPYww2xgSc4Ph2WeRIuUKquiVmURoN04+S/n5+X7f74/N5flwP79v3m3m/fJ1fl+dHb2Mc8CCPSOlNEdrbhrDeBOH4yN3oLRBbbzti7+2EOPXmHHDszZicxJ8GRuVkTUJIKEI4WihgTWFw19OXIoSEI5IQEjsHJCFFMCUpWYTOFkoDQrVQGliTCERwmFIY3E1Cq4UmMfgrDWNmC12ETcLqoKxqGIkNUQdl1cKqhRVh1cJmC1sHZZOwRfgkvAivFl534ZNwEnghEYids53EiQOS8EX4JHwRQWJDpBAUAMa8jKCBmygi6sCiWgSJIZXBQXkXkYIxtbd/",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\fact_sensitivity_rank.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"region_id", Int64.Type}, {"test_id", Int64.Type}, {"gap_rank", Int64.Type}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

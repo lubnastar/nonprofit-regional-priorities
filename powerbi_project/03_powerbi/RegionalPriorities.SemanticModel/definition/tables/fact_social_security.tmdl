@@ -1,0 +1,52 @@
+/// Social security beneficiaries by region and year, 2005-2022 (Grand Total row removed after reconciliation).
+table fact_social_security
+	lineageTag: 590c1fc5-00a1-584f-93cb-aeddb335b8de
+
+	/// Region key
+	column region_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cbb6213d-cab6-55ce-8d32-2e2a2b2a91b9
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Year key
+	column year
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cec6fff3-8e52-50d2-965c-b3a92801ac13
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Beneficiaries (individuals: head of household and dependants)
+	column beneficiaries
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: cc999473-77fc-518b-9501-8d4f24490e94
+		summarizeBy: none
+		sourceColumn: beneficiaries
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_social_security = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "TVdLrmU1DJy3xE4yiD/xZzWogQd6E5CaEWtjwJLYAuUc+zQ9uFJ1En/q2GW/f//+59vHb59//P7j5y/rr4+v39ZPH79//Pr58+fXb58ff/7whRbvfdaRIG9ky09mNPJFJHFOw1jE54g1zEWyT/Rl2ouMfHNDwmmKZ0MGPEraUBauHpq3uuioRzuiA1Oa76nh1GyPKUQlyj6Xoy6fHIio3E70Zd6LfeeWhs8L6iAZUTmioB++8MOF+d6D4HYjSGnoFcVhbwi3Hs5zGW4jeS6DDBal7FMqZ8goG8Jtugg3lIWHsNVQFyOqyo8fMpgdOTW0Ok0dU4gKROluGPDLduZywvK2aFNFRsBPpwAy5JzDHTPIYD2eeCsPGfi6oo1s6VYb5AsPY27GMknfjbJIdH8QiAgSyka0DCy1FdBg4tLvwIKn5yBdyJm50Vmu+dpEkaKwxoovMzpzFvC3NRrlCnzf8yCkT5vfJLgqFOH2S6QfLlXN+mRPh2kQSAdz3MiXoPykUYBFD22USxKF/SBkj5qvnPTJXpk4GzFuqrYHZH82/jXSpefYWDlLgytOfbJXV7NGvuBA2juyP6RnUKK1TRshe2PmjhrJB8tYQe5HdjXn6S+Ppo9GttDje858pXLVyOkmQFXwXM1LcFXuaUWgPCoNwTeifyEvCE3pw2lBkDylQ6cFgQ6N4RIEpn24ITqTH7ZO98Cuwm5YMiVWTX1aEETw+IFVBGcHD0RQiQptUyUIQlRVYC0I+3aijThy2bVmQlSyUTEhVzltmAjRfllMyLEcCKdghtpSyQFKppTTmgo0YtWXDRUeVe72UhFV79ZUkOtrCkGFvQhBQRti3GYZdu8Yiwmlc/rybYe0Sa+YILvV490PSH2QlfiJNMKPeg6CBOGIGkGBMkrp/OFBAKwR1c0zZ5AfO7vfgQR0B7dNcCDb5DRCfVLmWDF0464e84cADqtS8IcAOenjIaFhbP0O6Su8RyMoE12B9id5iXTEEp27RwwCO8dK7aK1wLL0LZ7c0Rw0Z/AHIvodctdzJ0K0FiAWbQR/LtlWSguO18iK0YItbbO0wK/aRGuBIZNGiCW5VDme3NXFxgq0AP/VN0sLaFvHgtwhfNUR8eSODq5GzO4AraCzPzvfpsweiMa1HGQ3QGzbjVBqGCV9s8of86GtVPWH7XZQxa8m/a5God6Pkl36tmlQbQWh7a8K3/J9h1g8z9hEHlWRjfCD6dre70Jg3lZqH8C86Hc1AZmrIGt+Xx1Mq4cPBNl56u4DMXdU+IUBcUCRDkxMs5MD8ZNu71tQEFskBvLyWmEGYhJGfr+sK+z29APPwhm9pwbI8p465h/XxHtgLIRMMrBkCRRMWCUBZG5zXhpw1HICAyGQaKrrNCJANbKol0UUgPnAkoF94+xtkdEZZyAIDux4DasboOc5ED9pdy3rbRGX79LW26Lu/51CDUj4Pb1yoOO39ABTZ/yWIJjJxFyKoKGTEQgRrJ3asDQBn/yFhPGtPDGXKohXiVNvi4QO84FgA/WoA+H3RGkt8aii7/ct/KKn5/SycTWFel3ENL77bq+LjFXovVzSuC8bsy6GfIcYY5Cu9y3UKnZMVMWGXOmkWReT9IUVld5a6nVR5G4aNOsi3/FNsy7a8xV6XQwuJSIZpXB9D2tLxfwbePvzGu6NEUjmtIbE9tIA6p2R8YeFDqwevYpEvTVioth7qrVKXzJ6bwRz+ZoCGa7+vvWyrK/f+kRUMki9OwoFj6kiI/INo8jIp6F7ecT3rD8G/gM=",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\fact_social_security.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"region_id", Int64.Type}, {"year", Int64.Type}, {"beneficiaries", Int64.Type}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

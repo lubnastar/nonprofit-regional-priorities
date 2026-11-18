@@ -1,0 +1,7 @@
+﻿test_id,test_key,test_name,test_short,what_changes
+1,base,Base (scenario A),Base,Equal-weight z-scores of the three fragility indicators
+2,no_ss,Without social security,No SS,Drop the social security rate
+3,no_income,Without income,No income,Drop Saudi median income
+4,no_food,Without food share,No food,Drop the food share of spending
+5,plus_margin,Plus income margin,+ Margin,Add income minus spending as a fourth indicator
+6,ranks_not_z,Ranks instead of z-scores,Ranks,Percentile ranks replace z-scores

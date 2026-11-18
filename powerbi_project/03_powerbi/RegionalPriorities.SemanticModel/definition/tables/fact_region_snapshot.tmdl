@@ -1,0 +1,129 @@
+/// Region-level snapshot: population 2022, social security 2022 and 2020-22 average, HIES 2023 income and spending.
+table fact_region_snapshot
+	lineageTag: e0977d8f-9261-5ab3-ae4c-84027b46124d
+
+	/// Region key
+	column region_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 591c6098-c580-541f-910a-76dd47f1db80
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Total population 2022 (SAMA)
+	column population_2022
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: aee4b0ff-ec0d-5b39-9e5e-074cb84907f7
+		summarizeBy: none
+		sourceColumn: population_2022
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Saudi population 2022 (GASTAT census)
+	column saudi_population_2022
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 02b88670-bfae-53c0-a73c-4b54d2d062ab
+		summarizeBy: none
+		sourceColumn: saudi_population_2022
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Average Saudi population 2020-2022
+	column saudi_population_avg_2020_2022
+		dataType: double
+		isHidden
+		formatString: #,0
+		lineageTag: 5011acd7-37c6-5338-ab99-ae558453de4d
+		summarizeBy: none
+		sourceColumn: saudi_population_avg_2020_2022
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Social security beneficiaries 2022
+	column beneficiaries_2022
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 79b6cdb4-ddf3-5dea-ac88-b60200a74db6
+		summarizeBy: none
+		sourceColumn: beneficiaries_2022
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Average beneficiaries 2020-2022
+	column beneficiaries_avg_2020_2022
+		dataType: double
+		isHidden
+		formatString: #,0
+		lineageTag: 11affd44-ca07-585b-992a-261dd9bf994b
+		summarizeBy: none
+		sourceColumn: beneficiaries_avg_2020_2022
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Median monthly disposable income per Saudi, SAR (HIES 2023)
+	column income_median_saudi
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 8fb8679a-2526-55d0-b754-66dd951b201a
+		summarizeBy: none
+		sourceColumn: income_median_saudi
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Mean monthly income per Saudi, SAR
+	column income_mean_saudi
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 2be71f28-129b-50bc-a806-533c01173141
+		summarizeBy: none
+		sourceColumn: income_mean_saudi
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Mean monthly spending per Saudi, SAR
+	column spend_mean_saudi
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: ae64f8c2-6723-5d3b-8fa4-e200be8a77a0
+		summarizeBy: none
+		sourceColumn: spend_mean_saudi
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Food & beverages share of household spending, all households (0-1)
+	column food_share
+		dataType: double
+		isHidden
+		formatString: 0.0%
+		lineageTag: 52ca2bfe-f241-54e3-ac7f-caae9748017f
+		summarizeBy: none
+		sourceColumn: food_share
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_region_snapshot = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "hVRbbttADPwXoJsQBt/LPY3hxkoqoLGDpOnl+tEj9QqdVdBYBgpUP5K44nA4HOr3z1+vy9N6vRzXM71cX96/nb6PN2VVeju9n9fjf6OnH0/jhD+OvyyX5XF9WE+v6/L2r9D95+vl4fq8HJ+X83q6HDfsW+wz8vayXM77wOP1ej6+fT29LvMkVNGleZG7dRUmN5diO9jfi6SFlJBK9Ixb3Jxcqyi6CwVIER/UvM2TUrGKp5FLWFPcOXqJ35KD1KP1JO2ZpQcmxTlZgoGxdGAZW8yToa61XqBhMUBxV7NkpFQz1BfO9H7Iz6uRggcAtZM2toFlA8uRiwqtU1ekMHVOHOxSKVDcKaOy3SOiVXDVwRMcgKih8xQUgodAte69xr0qijvYiYkMesnse7Ak0x7QzocuTTbZbJ6gBY8yQeLuOVJdzJUPOx4iaHb0oan3s9AmQWgPMM0+GLaap0ZVyQiktWShVMxFD7tEqw4S3hOsb4DIUGujr0DPER8qlsxTUfN0hlYoUEOBRME9SYdhGiUXyxisNQwRQ8ZTDpNYK5+nTohHa4O4BcTNZB+6qUJRvLLIng9CvvnF4Z2QjQ+8CgtDakdqhzrM2sZ4MQHz/Vx7NYF1IHTXPSo48aDQh3ayseOEbAJLd5zBjRhsw8yq6Z378T0Exdpw8L1ukkMy9jHQbRI+zCeKjLFqg/3YGyxApNzPEKMBMJfw3jC1qQHbyPCODMdYbpgGllH4FYAGLI3lxXE7jB3CE9ZJ6w4JzundN61H5xuSS5+nPw==",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\fact_region_snapshot.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"region_id", Int64.Type}, {"population_2022", Int64.Type}, {"saudi_population_2022", Int64.Type}, {"saudi_population_avg_2020_2022", type number}, {"beneficiaries_2022", Int64.Type}, {"beneficiaries_avg_2020_2022", type number}, {"income_median_saudi", Int64.Type}, {"income_mean_saudi", Int64.Type}, {"spend_mean_saudi", Int64.Type}, {"food_share", type number}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

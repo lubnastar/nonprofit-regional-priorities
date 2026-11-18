@@ -1,0 +1,37 @@
+check,result
+"HIES: 13 regions, no missing values",PASS
+"Raw shapes match notebook (2723, 169, 13, 252)",PASS
+SAMA population: Province ID equals region_id,PASS
+SAMA social security: Province ID equals region_id,PASS
+Region names in nonprofit_organizations all map to region_map,PASS
+Region names in sama_population all map to region_map,PASS
+Region names in gastat_saudi_population all map to region_map,PASS
+Region names in sama_social_security all map to region_map,PASS
+Region names in hies_2023 all map to region_map,PASS
+Organizations: 0 exact duplicate rows removed,PASS
+Organizations: every row has region and type,PASS
+Organizations equal notebook data_clean/charities.csv,PASS
+Saudi population < total population in every region,PASS
+Social security: Grand Total equals the sum of regions every year,PASS
+Social security: 234 rows = 13 regions x 18 years,PASS
+Social security equals notebook data_clean/social_security.csv,PASS
+"Merged table: 13 rows, no missing values",PASS
+Merged table equals notebook data_clean/regions_merged.csv,PASS
+Indicators equal notebook outputs/indicators.csv (all 20 numeric columns),PASS
+A_gap equals notebook priority_results.csv (2 dp),PASS
+B_gap equals notebook priority_results.csv (2 dp),PASS
+C_gap equals notebook priority_results.csv (2 dp),PASS
+D_gap equals notebook priority_results.csv (2 dp),PASS
+A_frag_part equals notebook priority_results.csv (2 dp),PASS
+A_dens_part equals notebook priority_results.csv (2 dp),PASS
+A_gap_rank equals notebook priority_results.csv,PASS
+B_gap_rank equals notebook priority_results.csv,PASS
+C_gap_rank equals notebook priority_results.csv,PASS
+D_gap_rank equals notebook priority_results.csv,PASS
+top5_scenarios equals notebook priority_results.csv,PASS
+A_source equals notebook (Arabic labels translated),PASS
+Sensitivity ranks (6 tests) equal notebook sensitivity_ranks.csv,PASS
+Random-weights and leave-one-out results equal notebook robustness_checks.csv,PASS
+"Stable priority regions = Najran, Jazan, Madinah, Tabuk, Makkah",PASS
+"Population fact: 169 rows = 13 regions x 13 years, no gaps",PASS
+"Organization counts by region equal notebook crosstab (2,723 total)",PASS

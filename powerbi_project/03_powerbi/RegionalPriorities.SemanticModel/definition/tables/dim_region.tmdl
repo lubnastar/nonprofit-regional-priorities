@@ -1,0 +1,103 @@
+/// One row per administrative region (13). Conformed dimension for every fact.
+table dim_region
+	lineageTag: 6cff3890-7236-5cd9-9c0c-a59f50a1ac58
+
+	/// Region key (1-13, equals SAMA Province ID)
+	column region_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0853ddbb-a04f-59a0-a483-790fe09dcc00
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Region name (English)
+	column region_en
+		dataType: string
+		lineageTag: 10cec91a-0e57-538c-b0b5-f8e1c374f4e9
+		summarizeBy: none
+		sourceColumn: region_en
+		sortByColumn: baseline_gap_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Region name (Arabic)
+	column region_ar
+		dataType: string
+		lineageTag: 347301d5-e6ee-5cac-8ca9-87e86a669c6b
+		summarizeBy: none
+		sourceColumn: region_ar
+		sortByColumn: baseline_gap_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Column of the region on the schematic tile map
+	column tile_col
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f07de5ab-f045-555f-82b8-6d2a74b41d4e
+		summarizeBy: none
+		sourceColumn: tile_col
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Row of the region on the schematic tile map
+	column tile_row
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5a9a33c4-7be5-5c3b-a2d3-f80671a81da5
+		summarizeBy: none
+		sourceColumn: tile_row
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Final notebook classification: stable priority (top 5 in >= 5 of 6 tests) split by gap source
+	column priority_group
+		dataType: string
+		lineageTag: f16a1123-13e7-52f7-9491-63e5cf6177be
+		summarizeBy: none
+		sourceColumn: priority_group
+		sortByColumn: priority_group_order
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Sort order of priority_group
+	column priority_group_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a44de544-1818-5240-8f3e-0a1d623af717
+		summarizeBy: none
+		sourceColumn: priority_group_order
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Gap rank in scenario A with equal weights (notebook result)
+	column baseline_gap_rank
+		dataType: int64
+		formatString: 0
+		lineageTag: 80cf6d7d-f98b-5c5f-9185-d14edb269154
+		summarizeBy: none
+		sourceColumn: baseline_gap_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_region = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "hVLLahtBELwPzD/sPW3Q7sqvow0JweCQhNyXljWSJtrMiNlVjHKLbQnhD4mtIGGUJyGH/MbMV+QXUqu1CCRswl566a7qqq75+f2HU31tTaa7dF8ps63YUalzlZ3ZvC6cPaeR09bpcpL1nR2P/vjNrOsqRx0uVK6Nyvo8yhyboRQxPdcT7g7I34Qrvw7X/sZ/oQTfE1tGHBUld3IVbekopTiVIqFTHg55QGEaLv0iqsCbch2mfkExxk5Zm3wS9dR5ZKzZGTnb02UB3l0pqm5XG663AnIXrsPsN88szP16w5M080BGm55xUehXNc2F/wyaKVpxs/hYil16yEWpnImeOvtamzNF273+K1hqGf4TzFzgHgvA/nGNlhR7dFRoR/6b/4j5NabbjfP7UuzTC+6Mh+Tf+9swD5fUguBGm20pDugx65z8Ctm8C1eYbjZ4IMUhmq4cVAaPN7kXdbgrnHnu7+7d4eqV6cpfAgVNfId4Ii064TdsyC8h4ANgMwho0yPHfZ1jLHrwl24kByBk8ku8M8Jll0i0Qqb/RSKiOKGjfOeYB1xLv8Xi1UZp2pxEtTGtcCd23KtxS9z3LSib/e1J8Qs=",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\dim_region.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"region_id", Int64.Type}, {"region_en", type text}, {"region_ar", type text}, {"tile_col", Int64.Type}, {"tile_row", Int64.Type}, {"priority_group", type text}, {"priority_group_order", Int64.Type}, {"baseline_gap_rank", Int64.Type}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

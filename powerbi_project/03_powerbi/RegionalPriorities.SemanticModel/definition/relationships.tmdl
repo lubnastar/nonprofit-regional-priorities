@@ -1,0 +1,40 @@
+relationship 2a2a35ff-061a-5ca6-8b32-d570cbdc8a6c
+	fromColumn: fact_region_snapshot.region_id
+	toColumn: dim_region.region_id
+
+relationship 8ca5c194-9418-5526-8960-74389fd26227
+	fromColumn: fact_population.region_id
+	toColumn: dim_region.region_id
+
+relationship f3e43d0b-d4d2-5709-a0cc-47dccaca6f7c
+	fromColumn: fact_population.year
+	toColumn: dim_year.year
+
+relationship 4cf310a1-de08-577d-9e67-52ca676c1c52
+	fromColumn: fact_social_security.region_id
+	toColumn: dim_region.region_id
+
+relationship 8ead06d5-94fc-5527-a44e-3ccf2c35d0e0
+	fromColumn: fact_social_security.year
+	toColumn: dim_year.year
+
+relationship 0464de56-99fd-54bd-970f-df335c209ad9
+	fromColumn: fact_organizations.region_id
+	toColumn: dim_region.region_id
+
+relationship cccd14ac-8448-5715-8850-2dc16e26f254
+	fromColumn: fact_organizations.org_type_id
+	toColumn: dim_org_type.org_type_id
+
+relationship 1090392e-9679-57db-af18-b89e12d0b685
+	fromColumn: fact_sensitivity_rank.region_id
+	toColumn: dim_region.region_id
+
+relationship 33a1c1da-e5fc-5f0d-916a-e565def0c519
+	fromColumn: fact_sensitivity_rank.test_id
+	toColumn: dim_sensitivity_test.test_id
+
+relationship 0fbb0047-86b4-5e62-8b92-1a531c368b76
+	fromColumn: fact_robustness.region_id
+	toColumn: dim_region.region_id
+

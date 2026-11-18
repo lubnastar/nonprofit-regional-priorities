@@ -1,0 +1,107 @@
+/// Random-weights (1,000 Dirichlet draws, seed 42) and leave-one-out results (notebook 8.2-8.3).
+table fact_robustness
+	lineageTag: 6fb3642c-a651-58dc-a3d3-9ca8fcebc850
+
+	/// Region key
+	column region_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4c716cde-00db-5974-a964-0e280b13e219
+		summarizeBy: none
+		sourceColumn: region_id
+
+		annotation SummarizationSetBy = Automatic
+
+	/// % of 1,000 random weightings with the region in the top 5
+	column weights_top5_pct
+		dataType: double
+		isHidden
+		formatString: 0.0
+		lineageTag: 1a478968-72ef-5dbe-9e7e-4da74777010d
+		summarizeBy: none
+		sourceColumn: weights_top5_pct
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Median rank across the 1,000 weightings
+	column weights_median_rank
+		dataType: double
+		isHidden
+		formatString: 0
+		lineageTag: d17c7bf5-29e2-57d6-875a-006313f318bc
+		summarizeBy: none
+		sourceColumn: weights_median_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Best rank across the weightings
+	column weights_best
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4ab98b7c-2cbe-5ade-a651-7ab54d556fc6
+		summarizeBy: none
+		sourceColumn: weights_best
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Worst rank across the weightings
+	column weights_worst
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6c6e80d6-1d22-599e-9b4d-0c91c2616365
+		summarizeBy: none
+		sourceColumn: weights_worst
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Times in the top 5 out of 12 leave-one-region-out runs
+	column loo_top5
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0dfc566e-e1b3-550c-9647-293eeacf5b20
+		summarizeBy: none
+		sourceColumn: loo_top5
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Best rank in leave-one-out
+	column loo_best
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7172dbe7-b9df-56b7-938c-b0f482575223
+		summarizeBy: none
+		sourceColumn: loo_best
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Worst rank in leave-one-out
+	column loo_worst
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 19f3da41-71b5-517c-9e3a-8d1800709aac
+		summarizeBy: none
+		sourceColumn: loo_worst
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_robustness = m
+		mode: import
+		source =
+				let
+				    // 1) read the clean CSV from 02_data; 2) if the folder is not reachable (project moved), use the embedded snapshot
+				    Embedded = "XVDbbcMwDPwXoE0OgkU9LE1jpI2RGm2twDGQ4frRkbpCSSpIjfKDPB3JI6mfr+9tvixtnZYz7vNyedtv096uabq+7k/icz4vp3XaTuv7k3uZb38F97bx66M17VWgeQGas8ZjcAN8EEcc0SNZQ6jZESJnAjK8ByFbE+AHaZEOQpJqQrAmdiGv7iEk0JrUM+JG4XqwhjWryxh1QGGasTUjSnBFx5KMZXEka4qK1P8a9UBXZSvfxJFcqUfTfT2PkesQucg/DtGNQT3B63JUmo6XeP0SxjS6NBwtInNhlKUyf0ex5hc=",
+				    FileBinary = try Binary.Buffer(File.Contents(DataFolder & "\fact_robustness.csv")) otherwise Binary.Decompress(Binary.FromText(Embedded, BinaryEncoding.Base64), Compression.Deflate),
+				    Source = Csv.Document(FileBinary, [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"region_id", Int64.Type}, {"weights_top5_pct", type number}, {"weights_median_rank", type number}, {"weights_best", Int64.Type}, {"weights_worst", Int64.Type}, {"loo_top5", Int64.Type}, {"loo_best", Int64.Type}, {"loo_worst", Int64.Type}}, "en-US")
+				in
+				    ChangedTypes
+
+	annotation PBI_ResultType = Table
+

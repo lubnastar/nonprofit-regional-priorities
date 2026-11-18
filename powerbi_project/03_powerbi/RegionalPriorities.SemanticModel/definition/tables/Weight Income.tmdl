@@ -1,0 +1,19 @@
+/// Weight of low Saudi median income in the fragility index (0-5, default 1)
+table 'Weight Income'
+	lineageTag: 97b40a12-7e9b-5d42-adab-66867ced7b49
+
+	column 'Weight Income'
+		dataType: int64
+		formatString: 0
+		lineageTag: c93bfc27-fa16-5f4c-84ec-719af72e2722
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition 'Weight Income' = calculated
+		mode: import
+		source = GENERATESERIES ( 0, 5, 1 )
+
+	annotation PBI_Id = 7ef4ad72e9bd5ba98e8be7d47e133426
+
